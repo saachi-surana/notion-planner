@@ -32,6 +32,9 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen bg-surface">
+      {/* Drag region for hidden title bar (traffic lights sit here) */}
+      <div className="drag-region" />
+
       {/* Tab Bar */}
       <div className="flex border-b border-border flex-shrink-0">
         {tabs.map(tab => (
@@ -40,8 +43,8 @@ function App() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex-1 py-2.5 text-xs font-medium transition-colors ${
               activeTab === tab.id
-                ? 'bg-[#3a3a3a] text-white'
-                : 'text-muted hover:text-white hover:bg-[#252525]'
+                ? 'bg-cardHover text-text'
+                : 'text-muted hover:text-text hover:bg-card'
             }`}
           >
             {tab.label}
@@ -61,7 +64,7 @@ function App() {
       <div className="border-t border-border p-2 flex-shrink-0">
         <button
           onClick={() => setShowQuickAdd(true)}
-          className="w-full py-1.5 text-xs text-muted hover:text-white border border-border hover:border-[#555] rounded transition-colors"
+          className="w-full py-1.5 text-xs text-muted hover:text-text border border-border hover:border-teal rounded transition-colors"
         >
           + Add to Notion
         </button>

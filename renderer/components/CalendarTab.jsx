@@ -4,7 +4,7 @@ function CalendarTab() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const COLORS = ['#7F77DD', '#1D9E75', '#BA7517'];
+  const COLORS = ['#31748f', '#ebbcba', '#9ccfd8'];
 
   useEffect(() => {
     loadEvents();
@@ -47,7 +47,7 @@ function CalendarTab() {
       {/* Header */}
       <div className="px-4 py-3 border-b border-border flex-shrink-0">
         <div className="text-[10px] font-semibold text-muted tracking-widest">TODAY</div>
-        <div className="text-sm font-semibold text-white mt-0.5">{formatDateHeader()}</div>
+        <div className="text-sm font-semibold text-text mt-0.5">{formatDateHeader()}</div>
       </div>
 
       {/* Events List */}
@@ -61,7 +61,7 @@ function CalendarTab() {
         {!loading && error && (
           <div className="p-3 text-xs text-muted">
             <div className="text-red-400 mb-2">{error}</div>
-            <button onClick={loadEvents} className="text-purple hover:underline">Retry</button>
+            <button onClick={loadEvents} className="text-teal hover:underline">Retry</button>
           </div>
         )}
 
@@ -86,7 +86,7 @@ function CalendarTab() {
               style={{ borderLeft: `3px solid ${color}` }}
             >
               <div className="px-3 py-2">
-                <div className="text-xs font-medium text-white leading-snug">{event.summary || 'Untitled'}</div>
+                <div className="text-xs font-medium text-text leading-snug">{event.summary || 'Untitled'}</div>
                 <div className="text-[10px] text-muted mt-0.5">{timeStr}</div>
                 {event.location && (
                   <div className="text-[10px] text-muted mt-0.5 truncate">📍 {event.location}</div>

@@ -2,9 +2,9 @@ function FocusTab() {
   const { useState, useEffect, useRef } = React;
 
   const MODES = {
-    work:       { label: 'Focus',       duration: 25 * 60, color: '#7F77DD' },
-    shortBreak: { label: 'Short Break', duration:  5 * 60, color: '#1D9E75' },
-    longBreak:  { label: 'Long Break',  duration: 15 * 60, color: '#BA7517' },
+    work:       { label: 'Focus',       duration: 25 * 60, color: '#31748f' },
+    shortBreak: { label: 'Short Break', duration:  5 * 60, color: '#ebbcba' },
+    longBreak:  { label: 'Long Break',  duration: 15 * 60, color: '#9ccfd8' },
   };
 
   const [mode, setMode] = useState('work');
@@ -96,7 +96,7 @@ function FocusTab() {
             key={key}
             onClick={() => handleModeClick(key)}
             className={`flex-1 py-2 text-[10px] font-medium transition-colors ${
-              mode === key ? 'text-white bg-[#3a3a3a]' : 'text-muted hover:text-white'
+              mode === key ? 'text-text bg-cardHover' : 'text-muted hover:text-text'
             }`}
           >
             {m.label}
@@ -113,7 +113,7 @@ function FocusTab() {
             <circle
               cx="88" cy="88" r={radius}
               fill="none"
-              stroke="#2a2a2a"
+              stroke="#1f1d2e"
               strokeWidth="6"
             />
             {/* Progress */}
@@ -197,7 +197,7 @@ function FocusTab() {
                     ? currentMode.color
                     : i === session && mode === 'work'
                       ? currentMode.color + '88'
-                      : '#3a3a3a'
+                      : '#403d52'
                 }}
               />
             ))}

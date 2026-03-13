@@ -134,7 +134,7 @@ function SetupScreen({ onComplete }) {
         {steps.map((s, i) => (
           <div
             key={s}
-            className={`flex-1 h-1 rounded-full ${i <= step ? 'bg-purple' : 'bg-border'}`}
+            className={`flex-1 h-1 rounded-full ${i <= step ? 'bg-teal' : 'bg-border'}`}
           />
         ))}
       </div>
@@ -144,14 +144,14 @@ function SetupScreen({ onComplete }) {
       {/* ── Step 0: Google ── */}
       {step === 0 && (
         <div className="fade-in flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-white">Connect Google Calendar</h2>
+          <h2 className="text-sm font-semibold text-text">Connect Google Calendar</h2>
           <p className="text-xs text-muted leading-relaxed">
-            Go to <strong>console.cloud.google.com</strong> → APIs &amp; Services → Credentials → Create OAuth 2.0 Client ID (Desktop app). Add <code className="text-purple">http://127.0.0.1</code> as an authorized redirect URI.
+            Go to <strong>console.cloud.google.com</strong> → APIs &amp; Services → Credentials → Create OAuth 2.0 Client ID (Desktop app). Add <code className="text-rose">http://127.0.0.1</code> as an authorized redirect URI.
           </p>
           <div>
             <label className="text-xs text-muted block mb-1">Google Client ID:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="652010531601-....apps.googleusercontent.com"
               value={googleClientId}
               onChange={e => setGoogleClientId(e.target.value)}
@@ -160,7 +160,7 @@ function SetupScreen({ onComplete }) {
           <div>
             <label className="text-xs text-muted block mb-1">Google Client Secret:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="GOCSPX-..."
               value={googleClientSecret}
               onChange={e => setGoogleClientSecret(e.target.value)}
@@ -173,7 +173,7 @@ function SetupScreen({ onComplete }) {
           {error && <p className="text-red-400 text-xs">{error}</p>}
           <div className="flex gap-2">
             <button onClick={handleGoogleAuth} disabled={loading}
-              className="flex-1 bg-purple hover:bg-[#6e66c8] text-white text-xs py-2 rounded transition-colors disabled:opacity-50">
+              className="flex-1 bg-teal hover:bg-pine text-white text-xs py-2 rounded transition-colors disabled:opacity-50">
               {loading ? 'Waiting for browser...' : 'Sign in with Google'}
             </button>
             <button onClick={skipStep} disabled={loading} className="text-xs text-muted hover:text-white px-3">Skip</button>
@@ -184,14 +184,14 @@ function SetupScreen({ onComplete }) {
       {/* ── Step 1: Spotify ── */}
       {step === 1 && (
         <div className="fade-in flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-white">Connect Spotify</h2>
+          <h2 className="text-sm font-semibold text-text">Connect Spotify</h2>
           <p className="text-xs text-muted leading-relaxed">
-            Go to <strong>developer.spotify.com/dashboard</strong> → Create App. Add <code className="text-purple">http://127.0.0.1:8888/callback</code> as a Redirect URI.
+            Go to <strong>developer.spotify.com/dashboard</strong> → Create App. Add <code className="text-rose">http://127.0.0.1:8888/callback</code> as a Redirect URI.
           </p>
           <div>
             <label className="text-xs text-muted block mb-1">Spotify Client ID:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="32-char hex string"
               value={spotifyClientId}
               onChange={e => setSpotifyClientId(e.target.value)}
@@ -200,7 +200,7 @@ function SetupScreen({ onComplete }) {
           <div>
             <label className="text-xs text-muted block mb-1">Spotify Client Secret:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="32-char hex string"
               value={spotifyClientSecret}
               onChange={e => setSpotifyClientSecret(e.target.value)}
@@ -210,14 +210,14 @@ function SetupScreen({ onComplete }) {
           <button
             onClick={handleSpotifyAuth}
             disabled={loading}
-            className="bg-[#3a3a3a] hover:bg-[#444] text-white text-xs py-2 px-3 rounded transition-colors"
+            className="bg-cardHover hover:bg-border text-text text-xs py-2 px-3 rounded transition-colors"
           >
             {loading ? 'Opening browser...' : 'Open Spotify Auth URL'}
           </button>
           <div>
             <label className="text-xs text-muted block mb-1">Paste the <strong>full redirect URL</strong> from browser:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="http://127.0.0.1:8888/callback?code=..."
               value={spotifyCode}
               onChange={e => setSpotifyCode(e.target.value)}
@@ -226,7 +226,7 @@ function SetupScreen({ onComplete }) {
           {error && <p className="text-red-400 text-xs">{error}</p>}
           <div className="flex gap-2">
             <button onClick={handleSpotifyCodeSubmit} disabled={loading}
-              className="flex-1 bg-[#1DB954] hover:bg-[#1aa34a] text-white text-xs py-2 rounded transition-colors">
+              className="flex-1 bg-teal hover:bg-pine text-white text-xs py-2 rounded transition-colors">
               Authorize
             </button>
             <button onClick={skipStep} className="text-xs text-muted hover:text-white px-3">Skip</button>
@@ -237,14 +237,14 @@ function SetupScreen({ onComplete }) {
       {/* ── Step 2: Canvas ── */}
       {step === 2 && (
         <div className="fade-in flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-white">Connect Canvas LMS</h2>
+          <h2 className="text-sm font-semibold text-text">Connect Canvas LMS</h2>
           <p className="text-xs text-muted leading-relaxed">
             Go to your Canvas account → Settings → Approved Integrations → New Access Token. Copy the token.
           </p>
           <div>
             <label className="text-xs text-muted block mb-1">Canvas Base URL:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="https://yourschool.instructure.com"
               value={canvasUrl}
               onChange={e => setCanvasUrl(e.target.value)}
@@ -253,7 +253,7 @@ function SetupScreen({ onComplete }) {
           <div>
             <label className="text-xs text-muted block mb-1">Canvas API Token:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="1234~abcdefghijklmnop..."
               value={canvasToken}
               onChange={e => setCanvasToken(e.target.value)}
@@ -263,7 +263,7 @@ function SetupScreen({ onComplete }) {
           {error && <p className="text-red-400 text-xs">{error}</p>}
           <div className="flex gap-2">
             <button onClick={handleCanvasSave} disabled={loading}
-              className="flex-1 bg-amber hover:bg-[#a56614] text-white text-xs py-2 rounded transition-colors">
+              className="flex-1 bg-rose hover:bg-[#d9a09e] text-surface text-xs py-2 rounded transition-colors">
               Save
             </button>
             <button onClick={skipStep} className="text-xs text-muted hover:text-white px-3">Skip</button>
@@ -274,14 +274,14 @@ function SetupScreen({ onComplete }) {
       {/* ── Step 3: Notion ── */}
       {step === 3 && (
         <div className="fade-in flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-white">Connect Notion</h2>
+          <h2 className="text-sm font-semibold text-text">Connect Notion</h2>
           <p className="text-xs text-muted leading-relaxed">
             Go to notion.so/my-integrations → New Integration. Create two databases: "Daily Tasks" (Name, Done, Date) and "Quick Notes" (Name, Body). Share both with your integration.
           </p>
           <div>
             <label className="text-xs text-muted block mb-1">Notion Integration Token:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="secret_..."
               value={notionToken}
               onChange={e => setNotionToken(e.target.value)}
@@ -291,7 +291,7 @@ function SetupScreen({ onComplete }) {
           <div>
             <label className="text-xs text-muted block mb-1">Daily Tasks DB ID:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="32-char hex from database URL"
               value={notionTasksDb}
               onChange={e => setNotionTasksDb(e.target.value)}
@@ -300,7 +300,7 @@ function SetupScreen({ onComplete }) {
           <div>
             <label className="text-xs text-muted block mb-1">Quick Notes DB ID:</label>
             <input
-              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="32-char hex from database URL"
               value={notionNotesDb}
               onChange={e => setNotionNotesDb(e.target.value)}
@@ -309,7 +309,7 @@ function SetupScreen({ onComplete }) {
           {error && <p className="text-red-400 text-xs">{error}</p>}
           <div className="flex gap-2">
             <button onClick={handleNotionSave} disabled={loading}
-              className="flex-1 bg-[#e8562a] hover:bg-[#d14e26] text-white text-xs py-2 rounded transition-colors">
+              className="flex-1 bg-teal hover:bg-pine text-white text-xs py-2 rounded transition-colors">
               Save
             </button>
             <button onClick={skipStep} className="text-xs text-muted hover:text-white px-3">Skip</button>
@@ -321,12 +321,12 @@ function SetupScreen({ onComplete }) {
       {step === 4 && (
         <div className="fade-in flex flex-col gap-3 items-center text-center">
           <div className="text-4xl mt-4">✓</div>
-          <h2 className="text-sm font-semibold text-white">You're all set!</h2>
+          <h2 className="text-sm font-semibold text-text">You're all set!</h2>
           <p className="text-xs text-muted">
-            Notion Planner is ready to use. You can update credentials anytime by editing <code className="text-purple">~/.notion-planner/config.json</code>.
+            Notion Planner is ready to use. You can update credentials anytime by editing <code className="text-rose">~/.notion-planner/config.json</code>.
           </p>
           <button onClick={handleFinish}
-            className="mt-2 bg-purple hover:bg-[#6e66c8] text-white text-xs py-2 px-6 rounded transition-colors">
+            className="mt-2 bg-teal hover:bg-pine text-white text-xs py-2 px-6 rounded transition-colors">
             Open App
           </button>
         </div>

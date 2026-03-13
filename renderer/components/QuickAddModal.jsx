@@ -40,28 +40,28 @@ function QuickAddModal({ onClose }) {
       className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="bg-[#2a2a2a] rounded-lg w-72 p-4 shadow-xl" onKeyDown={handleKeyDown}>
+      <div className="bg-card rounded-lg w-72 p-4 shadow-xl border border-border" onKeyDown={handleKeyDown}>
         <div className="flex items-center justify-between mb-3">
-          <div className="text-xs font-semibold text-white">Add to Notion</div>
+          <div className="text-xs font-semibold text-text">Add to Notion</div>
           <button onClick={onClose} className="text-muted hover:text-white text-sm">×</button>
         </div>
 
         {success ? (
           <div className="text-center py-4">
             <div className="text-2xl mb-1">✓</div>
-            <div className="text-xs text-teal">Added to Notion!</div>
+            <div className="text-xs" style={{ color: '#31748f' }}>Added to Notion!</div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <input
               ref={titleRef}
-              className="w-full bg-[#1e1e1e] border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted"
+              className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
               placeholder="Title *"
               value={title}
               onChange={e => setTitle(e.target.value)}
             />
             <textarea
-              className="w-full bg-[#1e1e1e] border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted resize-none"
+              className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted resize-none focus:border-teal"
               placeholder="Notes (optional)"
               rows={3}
               value={body}
@@ -72,7 +72,7 @@ function QuickAddModal({ onClose }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-[#e8562a] hover:bg-[#d14e26] text-white text-xs py-1.5 rounded transition-colors disabled:opacity-50"
+                className="flex-1 bg-teal hover:bg-pine text-white text-xs py-1.5 rounded transition-colors disabled:opacity-50"
               >
                 {loading ? 'Adding...' : 'Add to Notion'}
               </button>

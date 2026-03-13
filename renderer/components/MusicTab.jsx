@@ -77,7 +77,7 @@ function MusicTab() {
     <div className="h-full flex flex-col overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3 border-b border-border flex-shrink-0">
-        <div className="text-xs font-semibold text-white">Now Playing</div>
+        <div className="text-xs font-semibold text-text">Now Playing</div>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-4">
@@ -88,7 +88,7 @@ function MusicTab() {
         {!loading && error && (
           <div className="text-center">
             <div className="text-xs text-red-400 mb-2">{error}</div>
-            <button onClick={loadNowPlaying} className="text-xs text-purple hover:underline">Retry</button>
+            <button onClick={loadNowPlaying} className="text-xs text-teal hover:underline">Retry</button>
           </div>
         )}
 
@@ -112,7 +112,7 @@ function MusicTab() {
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-semibold text-white truncate">
+                <div className="text-xs font-semibold text-text truncate">
                   {track.item.name}
                 </div>
                 <div className="text-[10px] text-muted truncate mt-0.5">
@@ -128,7 +128,7 @@ function MusicTab() {
             <div className="mb-3">
               <div className="w-full h-1 bg-border rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#1DB954] rounded-full transition-all"
+                  className="h-full bg-teal rounded-full transition-all"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -153,14 +153,14 @@ function MusicTab() {
               <button
                 onClick={handlePlayPause}
                 disabled={isActing}
-                className="w-9 h-9 rounded-full bg-white hover:bg-gray-200 flex items-center justify-center transition-colors disabled:opacity-50"
+                className="w-9 h-9 rounded-full bg-teal hover:bg-pine flex items-center justify-center transition-colors disabled:opacity-50"
               >
                 {track.is_playing ? (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#1e1e1e">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
                     <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
                   </svg>
                 ) : (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#1e1e1e">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
                     <path d="M8 5v14l11-7z"/>
                   </svg>
                 )}

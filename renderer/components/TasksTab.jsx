@@ -63,7 +63,7 @@ function TasksTab() {
     <div className="h-full flex flex-col overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3 border-b border-border flex-shrink-0 flex items-center justify-between">
-        <div className="text-xs font-semibold text-white">Today's Tasks</div>
+        <div className="text-xs font-semibold text-text">Today's Tasks</div>
         <div className="text-[10px] text-muted">{done.length}/{tasks.length} done</div>
       </div>
 
@@ -111,7 +111,7 @@ function TasksTab() {
       <div className="border-t border-border px-3 py-2 flex-shrink-0 flex gap-2 items-center">
         <input
           ref={inputRef}
-          className="flex-1 bg-card border border-border rounded px-2 py-1.5 text-xs text-white placeholder-muted focus:border-[#555]"
+          className="flex-1 bg-card border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal"
           placeholder="Add a task..."
           value={newTaskText}
           onChange={e => setNewTaskText(e.target.value)}
@@ -119,7 +119,7 @@ function TasksTab() {
         />
         <button
           onClick={addTask}
-          className="w-7 h-7 bg-purple hover:bg-[#6e66c8] text-white rounded text-sm font-bold transition-colors flex items-center justify-center flex-shrink-0"
+          className="w-7 h-7 bg-teal hover:bg-pine text-white rounded text-sm font-bold transition-colors flex items-center justify-center flex-shrink-0"
         >
           +
         </button>
@@ -130,13 +130,13 @@ function TasksTab() {
 
 function TaskItem({ task, onToggle, onDelete }) {
   return (
-    <div className="task-item flex items-center gap-2 py-1.5 px-1 rounded hover:bg-[#252525] group fade-in">
+    <div className="task-item flex items-center gap-2 py-1.5 px-1 rounded hover:bg-cardHover group fade-in">
       <button
         onClick={onToggle}
         className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${
           task.done
             ? 'bg-teal border-teal'
-            : 'border-[#555] hover:border-[#777]'
+            : 'border-border hover:border-teal'
         }`}
       >
         {task.done && (
@@ -147,7 +147,7 @@ function TaskItem({ task, onToggle, onDelete }) {
       </button>
 
       <span className={`flex-1 text-xs leading-snug ${
-        task.done ? 'line-through text-muted' : 'text-white'
+        task.done ? 'line-through text-muted' : 'text-text'
       }`}>
         {task.text}
       </span>

@@ -12,14 +12,17 @@
       theme: {
         extend: {
           colors: {
-            surface: '#1e1e1e',
-            card: '#2a2a2a',
-            cardHover: '#333333',
-            border: '#3a3a3a',
-            muted: '#888888',
-            purple: '#7F77DD',
-            teal: '#1D9E75',
-            amber: '#BA7517',
+            surface: '#191724',
+            card: '#1f1d2e',
+            cardHover: '#26233a',
+            border: '#403d52',
+            muted: '#6e6a86',
+            text: '#e0def4',
+            teal: '#31748f',
+            rose: '#ebbcba',
+            pine: '#286983',
+            foam: '#9ccfd8',
+            iris: '#c4a7e7',
           }
         }
       }
@@ -35,17 +38,17 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #1e1e1e;
-      color: #ffffff;
+      background: #191724;
+      color: #e0def4;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       overflow: hidden;
       user-select: none;
       -webkit-app-region: no-drag;
     }
     ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: #1e1e1e; }
-    ::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
-    ::-webkit-scrollbar-thumb:hover { background: #666; }
+    ::-webkit-scrollbar-track { background: #191724; }
+    ::-webkit-scrollbar-thumb { background: #403d52; border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6e6a86; }
 
     .fade-in { animation: fadeIn 0.15s ease-in; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
@@ -55,6 +58,13 @@
 
     input:focus { outline: none; }
     button { cursor: pointer; border: none; background: none; color: inherit; }
+
+    /* Inset title bar drag region */
+    .drag-region {
+      -webkit-app-region: drag;
+      height: 28px;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
