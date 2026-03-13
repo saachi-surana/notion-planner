@@ -1,0 +1,40 @@
+{
+  "name": "notion-planner",
+  "version": "1.0.0",
+  "description": "Mac menu bar app for Calendar, Tasks, Canvas, and Spotify",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "NODE_ENV=development electron .",
+    "build": "electron-builder --mac",
+    "rebuild": "electron-rebuild",
+    "postinstall": "electron-rebuild"
+  },
+  "build": {
+    "appId": "com.notionplanner.app",
+    "productName": "Notion Planner",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": "dmg"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "node_modules/**/*"
+    ]
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "better-sqlite3": "^11.10.0",
+    "dotenv": "^16.4.1",
+    "electron-store": "^8.2.0",
+    "googleapis": "^133.0.0",
+    "open": "^9.1.0"
+  },
+  "devDependencies": {
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1",
+    "electron-rebuild": "^3.2.9"
+  }
+}
