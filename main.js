@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, ipcMain, nativeImage, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -48,26 +48,15 @@ function initDatabase() {
   return db;
 }
 
-let tray = null;
 let mainWindow = null;
 let db = null;
 
-// Tray requires an image argument but we use an empty one —
-// the visible menu bar item is driven entirely by setTitle('📋') below.
-function createEmptyIcon() {
-  return nativeImage.createEmpty();
-}
-
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 320,
-    height: 500,
-    frame: false,
-    resizable: false,
-    alwaysOnTop: true,
-    skipTaskbar: true,
-    transparent: false,
-    show: false,
+    width: 1000,
+    height: 800,
+    show: true,
+    backgroundColor: '#191724',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -78,66 +67,23 @@ function createWindow() {
 
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
-  mainWindow.on('blur', () => {
-    mainWindow.hide();
-  });
-
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
 
-function getWindowPosition() {
-  const { screen } = require('electron');
-  const trayBounds = tray.getBounds();
-  const windowBounds = mainWindow.getBounds();
-  const display = screen.getDisplayNearestPoint({ x: trayBounds.x, y: trayBounds.y });
-
-  // Center window under tray icon
-  let x = Math.round(trayBounds.x + trayBounds.width / 2 - windowBounds.width / 2);
-  // Place just below the menu bar
-  let y = Math.round(trayBounds.y + trayBounds.height + 4);
-
-  // Clamp horizontally so the window never goes off-screen
-  const { bounds } = display;
-  if (x + windowBounds.width > bounds.x + bounds.width) {
-    x = bounds.x + bounds.width - windowBounds.width - 8;
-  }
-  if (x < bounds.x) x = bounds.x + 8;
-
-  return { x, y };
-}
-
-function toggleWindow() {
-  if (mainWindow.isVisible()) {
-    mainWindow.hide();
-  } else {
-    const position = getWindowPosition();
-    mainWindow.setPosition(position.x, position.y, false);
-    mainWindow.show();
-    mainWindow.focus();
-  }
-}
-
 app.whenReady().then(() => {
   log('app.whenReady fired');
 
-  app.dock.hide();
   loadModules();
   db = initDatabase();
-
-  tray = new Tray(createEmptyIcon());
-  tray.setTitle('📋');
-  tray.setToolTip('Notion Planner');
-  tray.on('click', toggleWindow);
-  log('Tray created, bounds', tray.getBounds());
 
   createWindow();
   log('app ready, window created');
 });
 
-app.on('window-all-closed', (e) => {
-  e.preventDefault();
+app.on('window-all-closed', () => {
+  app.quit();
 });
 
 // ─── IPC Handlers ────────────────────────────────────────────────────────────
