@@ -1,10 +1,167 @@
+const GCAL_COLORS = {
+  '1':  { name: 'Tomato',     hex: '#D50000' },
+  '2':  { name: 'Flamingo',   hex: '#E67C73' },
+  '3':  { name: 'Tangerine',  hex: '#F4511E' },
+  '4':  { name: 'Banana',     hex: '#F6BF26' },
+  '5':  { name: 'Sage',       hex: '#33B679' },
+  '6':  { name: 'Basil',      hex: '#0F9D58' },
+  '7':  { name: 'Peacock',    hex: '#039BE5' },
+  '8':  { name: 'Blueberry',  hex: '#3F51B5' },
+  '9':  { name: 'Lavender',   hex: '#7986CB' },
+  '10': { name: 'Grape',      hex: '#8E24AA' },
+  '11': { name: 'Graphite',   hex: '#616161' },
+};
+const DEFAULT_EVENT_COLOR = '#31748f';
+
+function CreateEventModal({ onClose, onCreated }) {
+  const { useState } = React;
+  const today = new Date().toISOString().split('T')[0];
+  const [title, setTitle] = useState('');
+  const [date, setDate] = useState(today);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [colorId, setColorId] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!title.trim()) return;
+    setSubmitting(true);
+    setError('');
+    const result = await window.api.createCalendarEvent({
+      title: title.trim(),
+      date,
+      startTime: startTime || null,
+      endTime: endTime || null,
+      colorId: colorId || null,
+    });
+    setSubmitting(false);
+    if (result && result.error) {
+      setError(result.error);
+    } else {
+      onCreated();
+    }
+  }
+
+  const inputCls = "w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text placeholder-muted focus:border-teal transition-colors";
+  const labelCls = "block text-[10px] text-muted mb-1 uppercase tracking-wider";
+
+  return (
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50"
+      style={{ background: 'rgba(0,0,0,0.55)' }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div className="bg-card border border-border rounded-lg shadow-xl w-72 p-4 fade-in">
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-xs font-semibold text-text">New Event</div>
+          <button onClick={onClose} className="text-muted hover:text-text text-sm leading-none">✕</button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div>
+            <label className={labelCls}>Title *</label>
+            <input
+              className={inputCls}
+              placeholder="Event title"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              autoFocus
+              required
+            />
+          </div>
+
+          <div>
+            <label className={labelCls}>Date</label>
+            <input
+              type="date"
+              className={inputCls}
+              value={date}
+              onChange={e => setDate(e.target.value)}
+              style={{ colorScheme: 'dark' }}
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <label className={labelCls}>Start time</label>
+              <input
+                type="time"
+                className={inputCls}
+                value={startTime}
+                onChange={e => setStartTime(e.target.value)}
+                style={{ colorScheme: 'dark' }}
+              />
+            </div>
+            <div className="flex-1">
+              <label className={labelCls}>End time</label>
+              <input
+                type="time"
+                className={inputCls}
+                value={endTime}
+                onChange={e => setEndTime(e.target.value)}
+                style={{ colorScheme: 'dark' }}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className={labelCls}>Color</label>
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {Object.entries(GCAL_COLORS).map(([id, { name, hex }]) => (
+                <button
+                  key={id}
+                  type="button"
+                  title={name}
+                  onClick={() => setColorId(colorId === id ? '' : id)}
+                  className="rounded-full transition-transform hover:scale-110"
+                  style={{
+                    width: 18,
+                    height: 18,
+                    background: hex,
+                    outline: colorId === id ? `2px solid white` : '2px solid transparent',
+                    outlineOffset: 1,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {error && <div className="text-[10px] text-red-400">{error}</div>}
+
+          <div className="flex gap-2 pt-1">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-1.5 text-xs text-muted border border-border rounded hover:bg-cardHover transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={submitting || !title.trim()}
+              className="flex-1 py-1.5 text-xs font-medium rounded transition-colors"
+              style={{
+                background: submitting || !title.trim() ? '#26233a' : '#31748f',
+                color: submitting || !title.trim() ? '#6e6a86' : '#e0def4',
+              }}
+            >
+              {submitting ? 'Creating…' : 'Create'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 function CalendarTab() {
   const { useState, useEffect } = React;
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
-  const COLORS = ['#31748f', '#ebbcba', '#9ccfd8'];
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     loadEvents();
@@ -56,12 +213,28 @@ function CalendarTab() {
     window.api.openExternal(url);
   }
 
+  function eventColor(event) {
+    if (event.colorId && GCAL_COLORS[event.colorId]) {
+      return GCAL_COLORS[event.colorId].hex;
+    }
+    return DEFAULT_EVENT_COLOR;
+  }
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-border flex-shrink-0">
-        <div className="text-[10px] font-semibold text-muted tracking-widest">TODAY</div>
-        <div className="text-sm font-semibold text-text mt-0.5">{formatDateHeader()}</div>
+      <div className="px-4 py-3 border-b border-border flex-shrink-0 flex items-center justify-between">
+        <div>
+          <div className="text-[10px] font-semibold text-muted tracking-widest">TODAY</div>
+          <div className="text-sm font-semibold text-text mt-0.5">{formatDateHeader()}</div>
+        </div>
+        <button
+          onClick={() => setShowModal(true)}
+          className="w-6 h-6 rounded flex items-center justify-center text-muted hover:text-text hover:bg-cardHover transition-colors text-base leading-none"
+          title="New event"
+        >
+          +
+        </button>
       </div>
 
       {/* Events List */}
@@ -85,9 +258,8 @@ function CalendarTab() {
           </div>
         )}
 
-        {!loading && !error && events.map((event, i) => {
-          const color = COLORS[i % COLORS.length];
-          const isAllDay = !event.start?.dateTime;
+        {!loading && !error && events.map((event) => {
+          const color = eventColor(event);
           const startTime = event.start?.dateTime ? formatTime(event.start.dateTime) : 'All day';
           const endTime = event.end?.dateTime ? formatTime(event.end.dateTime) : '';
           const timeStr = endTime ? `${startTime} – ${endTime}` : startTime;
@@ -117,6 +289,13 @@ function CalendarTab() {
           ↻ Refresh
         </button>
       </div>
+
+      {showModal && (
+        <CreateEventModal
+          onClose={() => setShowModal(false)}
+          onCreated={() => { setShowModal(false); loadEvents(); }}
+        />
+      )}
     </div>
   );
 }

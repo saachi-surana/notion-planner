@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('api', {
   // Google Calendar
   getCalendarEvents: () => ipcRenderer.invoke('get-calendar-events'),
   startGoogleAuth: () => ipcRenderer.invoke('start-google-auth'),
+  createCalendarEvent: (eventData) => ipcRenderer.invoke('create-calendar-event', eventData),
 
   // Tasks
   getTasks: () => ipcRenderer.invoke('get-tasks'),

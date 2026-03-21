@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
+const SCOPES = ['https://www.googleapis.com/auth/calendar.events'];
 
 function getConfig() {
   const configPath = path.join(os.homedir(), '.notion-planner', 'config.json');
@@ -198,4 +198,34 @@ async function getCalendarEvents(appDataDir) {
   return response.data.items || [];
 }
 
-module.exports = { startAuth, getCalendarEvents };
+async function createCalendarEvent(appDataDir, { title, date, startTime, endTime, colorId }) {
+  let oauth2Client;
+  try {
+    oauth2Client = await getAuthorizedClient(appDataDir);
+  } catch (e) {
+    return { error: e.message };
+  }
+
+  const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+
+  let start, end;
+  if (startTime) {
+    start = { dateTime: `${date}T${startTime}:00`, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone };
+    end   = { dateTime: `${date}T${(endTime || startTime)}:00`, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone };
+  } else {
+    start = { date };
+    end   = { date };
+  }
+
+  const resource = { summary: title, start, end };
+  if (colorId) resource.colorId = colorId;
+
+  try {
+    const response = await calendar.events.insert({ calendarId: 'primary', resource });
+    return response.data;
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+module.exports = { startAuth, getCalendarEvents, createCalendarEvent };

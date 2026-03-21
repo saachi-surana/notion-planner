@@ -141,6 +141,14 @@ ipcMain.handle('start-google-auth', async () => {
   }
 });
 
+ipcMain.handle('create-calendar-event', async (_, eventData) => {
+  try {
+    return await googleApi.createCalendarEvent(APP_DATA_DIR, eventData);
+  } catch (err) {
+    return { error: err.message };
+  }
+});
+
 // Tasks (SQLite + Notion sync)
 ipcMain.handle('get-tasks', () => {
   const today = new Date().toISOString().split('T')[0];
