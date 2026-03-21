@@ -26,6 +26,20 @@ function CalendarTab() {
     setLoading(false);
   }
 
+  async function handleRetry() {
+    if (error && error.toLowerCase().includes('not authenticated')) {
+      setLoading(true);
+      setError('');
+      const result = await window.api.startGoogleAuth();
+      if (result && result.error) {
+        setError(result.error);
+        setLoading(false);
+        return;
+      }
+    }
+    await loadEvents();
+  }
+
   function formatTime(dateTimeStr) {
     if (!dateTimeStr) return '';
     const d = new Date(dateTimeStr);
@@ -61,7 +75,7 @@ function CalendarTab() {
         {!loading && error && (
           <div className="p-3 text-xs text-muted">
             <div className="text-red-400 mb-2">{error}</div>
-            <button onClick={loadEvents} className="text-teal hover:underline">Retry</button>
+            <button onClick={handleRetry} className="text-teal hover:underline">Retry</button>
           </div>
         )}
 

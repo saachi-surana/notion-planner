@@ -151,10 +151,15 @@ async function getAuthorizedClient(appDataDir) {
 
   // Auto-refresh if expired
   if (token.expiry_date && Date.now() > token.expiry_date - 60000) {
+    if (!token.refresh_token) {
+      throw new Error('Google token expired and no refresh token available. Please re-authenticate.');
+    }
     try {
       const { credentials } = await oauth2Client.refreshAccessToken();
-      saveToken(appDataDir, credentials);
-      oauth2Client.setCredentials(credentials);
+      // Google does not return refresh_token on refresh — merge to preserve it
+      const updatedToken = { ...token, ...credentials };
+      saveToken(appDataDir, updatedToken);
+      oauth2Client.setCredentials(updatedToken);
     } catch (e) {
       throw new Error('Google token expired and refresh failed. Please re-authenticate.');
     }
