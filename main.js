@@ -152,7 +152,7 @@ ipcMain.handle('create-calendar-event', async (_, eventData) => {
 // Tasks (SQLite + Notion sync)
 ipcMain.handle('get-tasks', () => {
   const today = new Date().toISOString().split('T')[0];
-  const rows = db.prepare('SELECT * FROM tasks WHERE date = ? ORDER BY created_at ASC').all(today);
+  const rows = db.prepare('SELECT * FROM tasks WHERE done = 0 ORDER BY date ASC, created_at ASC').all();
   return rows.map(r => ({ ...r, done: r.done === 1 }));
 });
 
