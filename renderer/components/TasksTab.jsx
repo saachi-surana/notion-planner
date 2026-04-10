@@ -166,11 +166,13 @@ function TaskItem({ task, onToggle, onDelete, onDragStart, onDragOver, onDrop })
     >
       <button
         onClick={onToggle}
-        className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${
-          task.done
-            ? 'bg-teal border-teal'
-            : 'border-border hover:border-teal bg-surface'
-        }`}
+        style={{
+          width: 16, height: 16, borderRadius: 3, flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          border: task.done ? '2px solid #31748f' : '2px solid #6e6a86',
+          background: task.done ? '#31748f' : 'transparent',
+          cursor: 'pointer'
+        }}
       >
         {task.done && (
           <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
