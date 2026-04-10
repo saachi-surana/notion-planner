@@ -225,6 +225,16 @@ ipcMain.handle('spotify-prev', async () => {
   }
 });
 
+
+ipcMain.handle('spotify-queue', async () => {
+  try { return await spotifyApi.getQueue(APP_DATA_DIR); } catch (e) { return { error: e.message }; }
+});
+ipcMain.handle('spotify-shuffle', async (_, state) => {
+  try { return await spotifyApi.toggleShuffle(APP_DATA_DIR, state); } catch (e) { return { error: e.message }; }
+});
+ipcMain.handle('spotify-repeat', async (_, state) => {
+  try { return await spotifyApi.toggleRepeat(APP_DATA_DIR, state); } catch (e) { return { error: e.message }; }
+});
 ipcMain.handle('start-spotify-auth', async () => {
   try {
     return await spotifyApi.startAuth(APP_DATA_DIR, mainWindow);

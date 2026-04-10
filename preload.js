@@ -24,6 +24,9 @@ contextBridge.exposeInMainWorld('api', {
   spotifyPlayPause: () => ipcRenderer.invoke('spotify-play-pause'),
   spotifyNext: () => ipcRenderer.invoke('spotify-next'),
   spotifyPrev: () => ipcRenderer.invoke('spotify-prev'),
+    getSpotifyQueue: () => ipcRenderer.invoke('spotify-queue'),
+    spotifyShuffle: (state) => ipcRenderer.invoke('spotify-shuffle', state),
+    spotifyRepeat: (state) => ipcRenderer.invoke('spotify-repeat', state),
   startSpotifyAuth: () => ipcRenderer.invoke('start-spotify-auth'),
   completeSpotifyAuth: (code) => ipcRenderer.invoke('complete-spotify-auth', code),
 

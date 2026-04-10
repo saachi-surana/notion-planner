@@ -218,4 +218,58 @@ async function prev(appDataDir) {
   return { success: true };
 }
 
-module.exports = { startAuth, completeAuth, getNowPlaying, playPause, next, prev };
+module.exports = { startAuth, completeAuth, getNowPlaying, playPause, next, prev, getQueue, toggleShuffle, toggleRepeat };
+
+async function getQueue(appDataDir) {
+  let token;
+  try { token = await getValidToken(appDataDir); } catch (e) { return { error: e.message }; }
+  try {
+    const response = await axios.get('https://api.spotify.com/v1/me/player/queue', {
+      headers: getAuthHeaders(token)
+    });
+    return response.data;
+  } catch (e) { return { error: e.message }; }
+}
+
+async function toggleShuffle(appDataDir, state) {
+  const token = await getValidToken(appDataDir);
+  await axios.put(`https://api.spotify.com/v1/me/player/shuffle?state=${state}`, {}, {
+    headers: getAuthHeaders(token)
+  });
+  return { success: true };
+}
+
+async function toggleRepeat(appDataDir, state) {
+  const token = await getValidToken(appDataDir);
+  await axios.put(`https://api.spotify.com/v1/me/player/repeat?state=${state}`, {}, {
+    headers: getAuthHeaders(token)
+  });
+  return { success: true };
+}
+
+async function getQueue(appDataDir) {
+  let token;
+  try { token = await getValidToken(appDataDir); } catch (e) { return { error: e.message }; }
+  try {
+    const response = await axios.get('https://api.spotify.com/v1/me/player/queue', {
+      headers: getAuthHeaders(token)
+    });
+    return response.data;
+  } catch (e) { return { error: e.message }; }
+}
+
+async function toggleShuffle(appDataDir, state) {
+  const token = await getValidToken(appDataDir);
+  await axios.put(`https://api.spotify.com/v1/me/player/shuffle?state=${state}`, {}, {
+    headers: getAuthHeaders(token)
+  });
+  return { success: true };
+}
+
+async function toggleRepeat(appDataDir, state) {
+  const token = await getValidToken(appDataDir);
+  await axios.put(`https://api.spotify.com/v1/me/player/repeat?state=${state}`, {}, {
+    headers: getAuthHeaders(token)
+  });
+  return { success: true };
+}
