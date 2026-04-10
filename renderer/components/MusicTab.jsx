@@ -4,14 +4,31 @@ function MusicTab() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isActing, setIsActing] = useState(false);
+  const [localProgress, setLocalProgress] = useState(0);
   const pollRef = useRef(null);
+  const progressRef = useRef(null);
+  const trackRef = useRef(null);
 
   useEffect(() => {
     loadNowPlaying();
-    // Poll every 5 seconds
     pollRef.current = setInterval(loadNowPlaying, 5000);
-    return () => clearInterval(pollRef.current);
+    return () => { clearInterval(pollRef.current); clearInterval(progressRef.current); };
   }, []);
+
+  useEffect(() => {
+    trackRef.current = track;
+    if (track) setLocalProgress(track.progress_ms || 0);
+    clearInterval(progressRef.current);
+    if (track && track.is_playing) {
+      progressRef.current = setInterval(() => {
+        setLocalProgress(p => {
+          const next = p + 1000;
+          return next > (trackRef.current?.item?.duration_ms || 0) ? p : next;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(progressRef.current);
+  }, [track]);
 
   async function loadNowPlaying() {
     try {
@@ -69,8 +86,8 @@ function MusicTab() {
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
-  const progress = track?.progress_ms && track?.item?.duration_ms
-    ? (track.progress_ms / track.item.duration_ms) * 100
+  const progress = localProgress && track?.item?.duration_ms
+    ? (localProgress / track.item.duration_ms) * 100
     : 0;
 
   return (
@@ -97,44 +114,81 @@ function MusicTab() {
         )}
 
         {!loading && !error && track && track.item && (
-          <div className="w-full fade-in">
-            {/* Album Art + Track Info */}
-            <div className="flex items-center gap-3 mb-4">
+          <div className="w-full fade-in" style={{display:'flex',flexDirection:'column',alignItems:'center',gap:16}}>
+            {/* Album Art with glow */}
+            <style>{`
+              @keyframes pulseGlow {
+                0%, 100% { opacity: 0.5; transform: scale(1); }
+                50% { opacity: 0.9; transform: scale(1.06); }
+              }
+              @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+              }
+              .album-glow {
+                animation: pulseGlow 2.4s ease-in-out infinite; opacity: 0.85;
+              }
+              .album-spin {
+                animation: spin 8s linear infinite;
+              }
+            `}</style>
+            <div style={{position:'relative',width:220,height:220}}>
+              {/* Glow layer */}
+              {track.item.album?.images?.[0]?.url && (
+                <img
+                  src={track.item.album.images[0].url}
+                  className="album-glow"
+                  style={{
+                    position:'absolute',
+                    width:220,height:220,
+                    borderRadius:'50%',
+                    objectFit:'cover',
+                    filter:'blur(20px) brightness(1.4) saturate(2)',
+                    top:0,left:0,
+                    zIndex:0
+                  }}
+                />
+              )}
+              {/* Main album art */}
               {track.item.album?.images?.[0]?.url ? (
                 <img
                   src={track.item.album.images[0].url}
                   alt="Album art"
-                  className="w-12 h-12 rounded-md flex-shrink-0 object-cover"
+                  className={track.is_playing ? 'album-spin' : ''}
+                  style={{
+                    position:'relative',
+                    width:220,height:220,
+                    borderRadius:'50%',
+                    objectFit:'cover',
+                    boxShadow:'0 8px 40px rgba(0,0,0,0.7)',
+                    zIndex:1,
+                    border:'3px solid rgba(255,255,255,0.08)'
+                  }}
                 />
               ) : (
-                <div className="w-12 h-12 rounded-md bg-card flex-shrink-0 flex items-center justify-center">
-                  <span className="text-lg">♪</span>
+                <div style={{width:220,height:220,borderRadius:'50%',background:'#26233a',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1,position:'relative'}}>
+                  <span style={{fontSize:48}}>♪</span>
                 </div>
               )}
-              <div className="flex-1 min-w-0">
-                <div className="text-xs font-semibold text-text truncate">
-                  {track.item.name}
-                </div>
-                <div className="text-[10px] text-muted truncate mt-0.5">
-                  {track.item.artists?.map(a => a.name).join(', ')}
-                </div>
-                <div className="text-[10px] text-muted truncate mt-0.5">
-                  {track.item.album?.name}
-                </div>
+            </div>
+            {/* Track Info */}
+            <div style={{textAlign:'center',width:'100%',padding:'0 16px'}}>
+              <div style={{fontSize:14,fontWeight:600,color:'#e0def4',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+                {track.item.name}
+              </div>
+              <div style={{fontSize:11,color:'#6e6a86',marginTop:4,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+                {track.item.artists?.map(a => a.name).join(', ')}
               </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="mb-3">
-              <div className="w-full h-1 bg-border rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-teal rounded-full transition-all"
-                  style={{ width: `${progress}%` }}
-                />
+            <div style={{width:'100%',padding:'0 16px'}}>
+              <div style={{width:'100%',height:4,background:'#26233a',borderRadius:2,overflow:'hidden'}}>
+                <div style={{height:'100%',background:'#31748f',borderRadius:2,width:`${progress}%`,transition:'width 0.3s'}} />
               </div>
-              <div className="flex justify-between mt-1">
-                <span className="text-[10px] text-muted">{msToMinSec(track.progress_ms || 0)}</span>
-                <span className="text-[10px] text-muted">{msToMinSec(track.item.duration_ms || 0)}</span>
+              <div style={{display:'flex',justifyContent:'space-between',marginTop:4}}>
+                <span style={{fontSize:10,color:'#6e6a86'}}>{msToMinSec(localProgress || 0)}</span>
+                <span style={{fontSize:10,color:'#6e6a86'}}>{msToMinSec(track.item.duration_ms || 0)}</span>
               </div>
             </div>
 
