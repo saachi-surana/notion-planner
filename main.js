@@ -150,9 +150,16 @@ ipcMain.handle('create-calendar-event', async (_, eventData) => {
 });
 
 // Tasks (SQLite + Notion sync)
+
+ipcMain.handle('reorder-tasks', (_, orderedIds) => {
+  orderedIds.forEach((id, index) => {
+    db.prepare('UPDATE tasks SET sort_order = ? WHERE id = ?').run(index, id);
+  });
+  return true;
+});
 ipcMain.handle('get-tasks', () => {
   const today = new Date().toISOString().split('T')[0];
-  const rows = db.prepare('SELECT * FROM tasks WHERE done = 0 ORDER BY date ASC, created_at ASC').all();
+  const rows = db.prepare('SELECT * FROM tasks WHERE done = 0 ORDER BY sort_order ASC, created_at ASC').all();
   return rows.map(r => ({ ...r, done: r.done === 1 }));
 });
 

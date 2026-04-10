@@ -3,7 +3,30 @@ function TasksTab() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newTaskText, setNewTaskText] = useState('');
+  const [draggedId, setDraggedId] = useState(null);
   const inputRef = useRef(null);
+
+  function handleDragStart(e, id) {
+    setDraggedId(id);
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleDragOver(e, id) {
+    e.preventDefault();
+  }
+
+  async function handleDrop(e, targetId) {
+    e.preventDefault();
+    if (draggedId === targetId) return;
+    const allTasks = [...tasks];
+    const draggedIndex = allTasks.findIndex(t => t.id === draggedId);
+    const targetIndex = allTasks.findIndex(t => t.id === targetId);
+    const [removed] = allTasks.splice(draggedIndex, 1);
+    allTasks.splice(targetIndex, 0, removed);
+    setTasks(allTasks);
+    setDraggedId(null);
+    await window.api.reorderTasks(allTasks.map(t => t.id));
+  }
 
   useEffect(() => {
     loadTasks();
@@ -88,6 +111,9 @@ function TasksTab() {
             task={task}
             onToggle={() => toggleTask(task.id)}
             onDelete={() => deleteTask(task.id)}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
           />
         ))}
 
@@ -128,9 +154,16 @@ function TasksTab() {
   );
 }
 
-function TaskItem({ task, onToggle, onDelete }) {
+function TaskItem({ task, onToggle, onDelete, onDragStart, onDragOver, onDrop }) {
   return (
-    <div className="task-item flex items-center gap-2 py-1.5 px-1 rounded hover:bg-cardHover group fade-in">
+    <div
+      className="task-item flex items-center gap-2 py-1.5 px-1 rounded hover:bg-cardHover group fade-in"
+      draggable
+      onDragStart={(e) => onDragStart(e, task.id)}
+      onDragOver={(e) => { e.preventDefault(); onDragOver(e, task.id); }}
+      onDrop={(e) => onDrop(e, task.id)}
+      style={{ cursor: 'grab' }}
+    >
       <button
         onClick={onToggle}
         className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${

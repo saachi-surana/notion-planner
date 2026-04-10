@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld('api', {
 
   // Tasks
   getTasks: () => ipcRenderer.invoke('get-tasks'),
+    reorderTasks: (ids) => ipcRenderer.invoke('reorder-tasks', ids),
   addTask: (text) => ipcRenderer.invoke('add-task', text),
   toggleTask: (id) => ipcRenderer.invoke('toggle-task', id),
   deleteTask: (id) => ipcRenderer.invoke('delete-task', id),
