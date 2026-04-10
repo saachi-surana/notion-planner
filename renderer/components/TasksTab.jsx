@@ -169,7 +169,7 @@ function TaskItem({ task, onToggle, onDelete, onDragStart, onDragOver, onDrop })
         className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${
           task.done
             ? 'bg-teal border-teal'
-            : 'border-border hover:border-teal'
+            : 'border-border hover:border-teal bg-surface'
         }`}
       >
         {task.done && (

@@ -182,7 +182,7 @@ ipcMain.handle('toggle-task', async (_, id) => {
   const updated = db.prepare('SELECT * FROM tasks WHERE id = ?').get(id);
 
   // Sync to Notion async
-  notionApi.toggleTask(updated).catch(console.error);
+  notionApi.toggleTask(updated).catch(() => {});
 
   return { ...updated, done: updated.done === 1 };
 });
